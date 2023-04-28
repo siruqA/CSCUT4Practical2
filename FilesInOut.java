@@ -12,23 +12,64 @@ import java.lang.Number;
  */
 public class FilesInOut {
 
-    public static void main(String[] args) {
-        // Replace this with statements to set the file name (input) and file name (output).
-        // Initially it will be easier to hardcode suitable file names.
+	public static void main(String[] args) throws FileNotFoundException {
+		String inputFile = " ";
+		String outputFile = " ";
+		String flag = " ";
+		boolean uppercase = false;
 
-        // Set up a new Scanner to read the input file.
-        // Processing line by line would be sensible here.
-        // Initially, echo the text to System.out to check you are reading correctly.
-        // Then add code to modify the text to the output format.
+		if (args.length == 2) {
+			inputFile = args[0];
+			outputFile = args[1];
+		}
+		if (args.length == 3) {
+			uppercase = true;
+			flag = args[0];
+			inputFile = args[1];
+			outputFile = args[2];
+		}
 
-        // Set up a new PrintWriter to write the output file.
-        // Add suitable code into the above processing (because you need to do this line by line also.
-        // That is, read a line, write a line, loop.
+		Scanner scan = new Scanner(new File(inputFile));
+		PrintWriter write = new PrintWriter(new File(outputFile));
 
-        // Finally, add code to read the filenames as arguments from the command line.
+		while (scan.hasNextLine()) {
+			String line = scan.nextLine();
+			String[] tokens = line.split(" ");
 
-        System.out.println("You need to add your own code to do anything");
+			String name = "";
+		    String date = "";
 
-    } // main
+
+		    for (String token : tokens) {
+		        try {
+		            Integer.parseInt(token);
+		            date = token.substring(0, 2) + "/" + token.substring(2, 4) + "/" + token.substring(4);
+		            
+		        } catch (NumberFormatException e) {
+		        	String formatName = "";
+		        	
+		        	if (token.length() == 1) {
+		            formatName = token.substring(0, 1).toUpperCase() + ".";
+		        	}
+		        	else {
+		    			if (uppercase) {
+		    				formatName = token.toUpperCase();
+		    			} else {
+		    				formatName = token.toLowerCase().substring(0, 1).toUpperCase()
+		    						+ token.substring(1).toLowerCase();
+		    			}
+		    		}
+		            name += formatName + " ";
+		        }
+		    }
+
+		    String formatted = String.format("%-20s\t%s", name, date);
+		    write.println(formatted);
+		}
+		scan.close();
+		write.close();
+		System.out.println("File succesfully read and formatted.");
+		
+	}
 
 } // FilesInOut
